@@ -27,33 +27,27 @@ for i in $(seq -w 01 24)
     samtools fastq dorado_sup_out/barcode${i}.bam > samtools_fastq_out/barcode${i}.fastq
 done
 
-#download reference genomes (try making this a for loop)
-datasets download genome accession GCA_004027475.1 --include genome,seq-report --filename GCA_004027475.1.zip
-unzip GCA_004027475.1.zip -d datasets_out/GCA_004027475.1
+#download reference genomes 
+# An array of accession numbers
+ACCESSIONS=(
+    "GCA_004027475.1"
+    "GCA_004027735.1"
+    "GCA_014824575.3"
+    "GCA_027563665.1"
+    "GCA_027574615.1"
+    "GCA_036850765.1"
+    "GCA_038363175.3"
+    "GCA_039880945.1"
+    "GCA_963259705.2"
+)
 
-datasets download genome accession GCA_004027735.1 --include genome,seq-report --filename GCA_004027735.1.zip
-unzip GCA_004027735.1.zip -d datasets_out/GCA_004027735.1
-
-datasets download genome accession GCA_014824575.3 --include genome,seq-report --filename GCA_014824575.3.zip
-unzip GCA_014824575.3.zip -d datasets_out/GCA_014824575.3
-
-datasets download genome accession GCA_027563665.1 --include genome,seq-report --filename GCA_027563665.1.zip
-unzip GCA_027563665.1.zip -d datasets_out/GCA_027563665.1
-
-datasets download genome accession GCA_027574615.1 --include genome,seq-report --filename GCA_027574615.1.zip
-unzip GCA_027574615.1.zip -d datasets_out/GCA_027574615.1
-
-datasets download genome accession GCA_036850765.1 --include genome,seq-report --filename GCA_036850765.1.zip
-unzip GCA_036850765.1.zip -d datasets_out/GCA_036850765.1
-
-datasets download genome accession GCA_038363175.3 --include genome,seq-report --filename GCA_038363175.3.zip
-unzip GCA_038363175.3.zip -d datasets_out/GCA_038363175.3
-
-datasets download genome accession GCA_039880945.1 --include genome,seq-report --filename GCA_039880945.1.zip
-unzip GCA_039880945.1.zip -d datasets_out/GCA_039880945.1
-
-datasets download genome accession GCA_963259705.2 --include genome,seq-report --filename GCA_963259705.2.zip
-unzip GCA_963259705.2.zip -d datasets_out/GCA_963259705.2
+# Loop through the accession numbers and download/unzip each one
+for acc in "${ACCESSIONS[@]}"; do
+    echo "Downloading and unzipping ${acc}"
+    datasets download genome accession "${acc}" --include genome,seq-report --filename "${acc}.zip"
+    unzip "${acc}.zip" -d "datasets_out/${acc}"
+    echo "Done with ${acc}"
+done
 
 #Host Sequence Filtering
 # Declare an associative array
